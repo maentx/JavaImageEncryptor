@@ -18,9 +18,9 @@ class EncryptPicture
     {
         BufferedImage input = null;
 
-		try {
+        try {
             input = ImageIO.read(new File("decrypted.png"));
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
@@ -31,7 +31,7 @@ class EncryptPicture
             CipherOutputStream cos = new CipherOutputStream(output, pbeCipher);
             ImageIO.write(input,"png",cos);
             cos.close();
-		}
+        }
         catch (IOException e) {}
         catch (NoSuchAlgorithmException e) {}
         catch (NoSuchPaddingException e) {}

@@ -17,8 +17,8 @@ class DecryptPicture
 {
     public static void main(String args[])
     {
-		try {
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
@@ -33,7 +33,7 @@ class DecryptPicture
             cis.close();
             FileOutputStream output = new FileOutputStream("decrypted.png");
             ImageIO.write(img,"png",output);
-		}
+        }
         catch (IOException e) {}
         catch (NoSuchAlgorithmException e) {}
         catch (NoSuchPaddingException e) {}
