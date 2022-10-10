@@ -10,17 +10,13 @@ import javax.crypto.*;
 import javax.crypto.SecretKeyFactory;
 import java.security.*;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-// import java.security.NoSuchAlgorithmException;
+import javax.crypto.spec.*;
 import java.security.spec.InvalidKeySpecException;
 
 class DecryptPicture
 {
     public static void main(String args[])
     {
-        BufferedImage img = null;
-
 		try {
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");

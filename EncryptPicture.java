@@ -7,21 +7,19 @@ import java.awt.image.*;
 import javax.imageio.*;
 import javax.swing.*;
 import javax.crypto.*;
-import javax.crypto.SecretKeyFactory;
 import java.security.*;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.spec.PBEParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.*;
 import java.security.spec.InvalidKeySpecException;
 
 class EncryptPicture
 {
     public static void main(String args[])
     {
-        BufferedImage img = null;
+        BufferedImage input = null;
 
 		try {
-            img = ImageIO.read(new File("decrypted.png"));
+            input = ImageIO.read(new File("decrypted.png"));
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
@@ -31,7 +29,7 @@ class EncryptPicture
             pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
             FileOutputStream output = new FileOutputStream("encrypted.png");
             CipherOutputStream cos = new CipherOutputStream(output, pbeCipher);
-            ImageIO.write(img,"png",cos);
+            ImageIO.write(input,"png",cos);
             cos.close();
 		}
         catch (IOException e) {}
