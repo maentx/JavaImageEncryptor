@@ -18,21 +18,22 @@ class DecryptPicture
     public static void main(String args[])
     {
         try {
+            IvParameterSpec iv = new IvParameterSpec("1234567812345678".getBytes());
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_128");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
-            PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20);
-            Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+            PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20, iv);
+            Cipher pbeCipher = Cipher.getInstance("PBEWithHmacSHA256AndAES_128");
             pbeCipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
 
             File inputFile = new File("encrypted.png");
             FileInputStream fis = new FileInputStream(inputFile);
             CipherInputStream cis = new CipherInputStream(fis, pbeCipher);
-            img = ImageIO.read(cis);
+            BufferedImage input = ImageIO.read(cis);
             cis.close();
             FileOutputStream output = new FileOutputStream("decrypted.png");
-            ImageIO.write(img,"png",output);
+            ImageIO.write(input,"png",output);
         }
         catch (IOException e) {}
         catch (NoSuchAlgorithmException e) {}

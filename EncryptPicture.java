@@ -17,12 +17,13 @@ class EncryptPicture
     public static void main(String args[])
     {
         try {
+            IvParameterSpec iv = new IvParameterSpec("1234567812345678".getBytes());
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
+            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_128");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
-            PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20);
-            Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
+            PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20, iv);
+            Cipher pbeCipher = Cipher.getInstance("PBEWithHmacSHA256AndAES_128");
             pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
 
             BufferedImage input = ImageIO.read(new File("decrypted.png"));
