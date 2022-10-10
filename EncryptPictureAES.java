@@ -12,23 +12,22 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.*;
 import java.security.spec.InvalidKeySpecException;
 
-class EncryptPicture
+class EncryptPictureAES
 {
     public static void main(String args[])
     {
         try {
             IvParameterSpec iv = new IvParameterSpec("1234567812345678".getBytes());
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithHmacSHA256AndAES_128");
-            PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
+            SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+            PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray(), "saltandp".getBytes(), 65536, 256);
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
-            PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20, iv);
-            Cipher pbeCipher = Cipher.getInstance("PBEWithHmacSHA256AndAES_128");
-            pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
+            SecretKeySpec secretKey = new SecretKeySpec(pbeKey.getEncoded(), "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, iv);
 
             BufferedImage input = ImageIO.read(new File("decrypted.png"));
             FileOutputStream output = new FileOutputStream("encrypted.png");
-            CipherOutputStream cos = new CipherOutputStream(output, pbeCipher);
+            CipherOutputStream cos = new CipherOutputStream(output, cipher);
             ImageIO.write(input,"png",cos);
             cos.close();
         }
@@ -45,7 +44,7 @@ class EncryptPicture
             System.out.println("InvalidKeySpecException: " + e);
         }
         catch (InvalidKeyException e) {
-            System.out.println("InvalidKeyException");
+            System.out.println("InvalidKeyException: " + e);
         }
         catch (InvalidAlgorithmParameterException e) {
             System.out.println("InvalidAlgorithmParameterException: " + e);
