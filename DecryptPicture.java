@@ -12,27 +12,31 @@ import java.security.*;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+// import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
-class EncryptPicture
+class DecryptPicture
 {
     public static void main(String args[])
     {
         BufferedImage img = null;
 
 		try {
-            img = ImageIO.read(new File("decrypted.png"));
 			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
             PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20);
             Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
-            pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
-            FileOutputStream output = new FileOutputStream("encrypted.png");
-            CipherOutputStream cos = new CipherOutputStream(output, pbeCipher);
-            ImageIO.write(img,"png",cos);
-            cos.close();
+            pbeCipher.init(Cipher.DECRYPT_MODE, pbeKey, pbeParamSpec);
+
+            File inputFile = new File("encrypted.png");
+            FileInputStream fis = new FileInputStream(inputFile);
+            CipherInputStream cis = new CipherInputStream(fis, pbeCipher);
+            img = ImageIO.read(cis);
+            cis.close();
+            FileOutputStream output = new FileOutputStream("decrypted.png");
+            ImageIO.write(img,"png",output);
 		}
         catch (IOException e) {}
         catch (NoSuchAlgorithmException e) {}
