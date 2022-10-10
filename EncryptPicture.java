@@ -16,10 +16,7 @@ class EncryptPicture
 {
     public static void main(String args[])
     {
-        BufferedImage input = null;
-
         try {
-            input = ImageIO.read(new File("decrypted.png"));
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
             PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray());
@@ -27,6 +24,8 @@ class EncryptPicture
             PBEParameterSpec pbeParamSpec = new PBEParameterSpec("saltandp".getBytes(), 20);
             Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
             pbeCipher.init(Cipher.ENCRYPT_MODE, pbeKey, pbeParamSpec);
+
+            BufferedImage input = ImageIO.read(new File("decrypted.png"));
             FileOutputStream output = new FileOutputStream("encrypted.png");
             CipherOutputStream cos = new CipherOutputStream(output, pbeCipher);
             ImageIO.write(input,"png",cos);
