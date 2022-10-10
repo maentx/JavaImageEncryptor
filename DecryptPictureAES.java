@@ -20,7 +20,8 @@ class DecryptPictureAES
         try {
             IvParameterSpec iv = new IvParameterSpec("1234567812345678".getBytes());
             SecretKeyFactory keyFac = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-            PBEKeySpec pbeKeySpec = new PBEKeySpec("bar".toCharArray(), "saltandp".getBytes(), 65536, 256);
+            char[] pwd = "password".toCharArray(); // Use a secret manager in production
+            PBEKeySpec pbeKeySpec = new PBEKeySpec(pwd, "saltandp".getBytes(), 65536, 256);
             SecretKey pbeKey = keyFac.generateSecret(pbeKeySpec);
             SecretKeySpec secretKey = new SecretKeySpec(pbeKey.getEncoded(), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
