@@ -32,9 +32,15 @@ class EncryptPicture
             ImageIO.write(input,"png",cos);
             cos.close();
         }
-        catch (IOException e) {}
-        catch (NoSuchAlgorithmException e) {}
-        catch (NoSuchPaddingException e) {}
+        catch (IOException e) {
+            System.out.println("IOException: " + e);
+        }
+        catch (NoSuchAlgorithmException e) {
+            System.out.println("NoSuchAlgorithmException: " + e);
+        }
+        catch (NoSuchPaddingException e) {
+            System.out.println("NoSuchPaddingException: " + e);
+        }
         catch (InvalidKeySpecException e) {
             System.out.println("InvalidKeySpecException");
         }
